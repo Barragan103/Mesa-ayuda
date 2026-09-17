@@ -1,5 +1,5 @@
 # Sistema de Mesa de Ayuda Corporativa
-Aplicación web desarrollada para la gestión de incidentes y solicitudes de soporte dentro de una organización.
+Sistema de mesa de ayuda corporativa desarrollado para centralizar la gestión de incidentes, solicitudes y requerimientos tecnológicos dentro de una organización. La plataforma permite registrar, asignar y realizar seguimiento de tickets, facilitando la comunicación entre usuarios y personal de soporte.
 
 
 ## Tecnologías utilizadas
@@ -16,11 +16,11 @@ Aplicación web desarrollada para la gestión de incidentes y solicitudes de sop
 - MySQL
  
 ## Funcionalidades
- 
 - Inicio de sesión y autenticación.
 - Gestión de usuarios.
-- Registro y seguimiento de incidentes.
-- Administración de solicitudes.
+- Creación y seguimiento de tickets.
+- Gestión de incidentes.
 - Panel administrativo.
 - Gestión de hardware y software.
-- Sistema de comunicación interna.
+- Comunicación interna.
+- Control de estados y seguimiento de solicitudes.
