@@ -1,0 +1,121 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// prisma/schema.prisma
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum RequestStatus {
+  PENDING
+  RESOLVED
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  apellido  String
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      Role     @default(EMPLOYEE)
+  areaId    Int?
+  area      Area?    @relation(fields: [areaId], references: [id])
+  createdAt DateTime @default(now())
+
+  // Mensajes que envía este usuario
+  messages Message[] @relation("UserMessages")
+
+  // HelpRequests que creó este usuario
+  helpRequests HelpRequest[] @relation("UserHelpRequests")
+
+  @@map("users")
+}
+
+model Area {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+  users  User[]
+
+  @@map("areas")
+}
+
+model SoftwareIssue {
+  id          Int    @id @default(autoincrement())
+  descripcion String @unique
+
+  @@map("software_issues")
+}
+
+model HardwareIssue {
+  id          Int    @id @default(autoincrement())
+  descripcion String @unique
+
+  @@map("hardware_issues")
+}
+
+model OtherIssue {
+  id          Int    @id @default(autoincrement())
+  descripcion String @unique
+
+  @@map("other_issues")
+}
+
+model HelpRequest {
+  id            Int      @id @default(autoincrement())
+  nombre        String
+  apellido      String
+  email         String
+  area          String
+  software      Boolean  @default(false)
+  softwareIssue String?
+  hardware      Boolean  @default(false)
+  hardwareIssue String?
+  other         Boolean  @default(false)
+  otherIssue    String?
+  createdAt     DateTime @default(now())
+
+  status     RequestStatus @default(PENDING)
+  resolvedBy String?
+  resolvedAt DateTime?
+
+  // Mensajes de este ticket
+  messages Message[] @relation("HelpRequestMessages")
+
+  // Solicitante (usuario) de este ticket
+  solicitanteId Int
+  solicitante   User @relation("UserHelpRequests", fields: [solicitanteId], references: [id])
+
+  @@map("help_requests")
+}
+
+model Message {
+  id Int @id @default(autoincrement())
+
+  // Relación con HelpRequest
+  helpRequestId Int
+  helpRequest   HelpRequest @relation("HelpRequestMessages", fields: [helpRequestId], references: [id])
+
+  // Quién envía el mensaje
+  senderId Int
+  sender   User @relation("UserMessages", fields: [senderId], references: [id])
+
+  content   String
+  createdAt DateTime @default(now())
+
+  @@map("messages")
+}
